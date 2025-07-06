@@ -55,6 +55,9 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+
+
+
 static int cmd_si(char *args) {
 	int n = (args != NULL) ? atoi(args) : 1;
 	cpu_exec(n);
