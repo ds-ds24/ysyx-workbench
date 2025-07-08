@@ -66,6 +66,14 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
+static int cmd_info(char *args) {
+	if(strcmp(args,"r")==0){
+		isa_reg_display();
+	}
+	return 0;
+}
+
+
 static int cmd_help(char *args);
 
 
@@ -80,6 +88,7 @@ static struct {
 
   /* TODO: Add more commands */
   {"si","Let the program excute N instuctions in a single step and the suspend execution",cmd_si},
+	{"info","Print registers",cmd_info}
 
 };
 
