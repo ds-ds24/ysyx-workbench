@@ -79,7 +79,11 @@ static int cmd_info(char *args) {
 static int cmd_p(char *args){
   init_regex();
   bool success;
-  return expr( args,&success);
+  word_t endnum = expr( args,&success);
+  if(success){
+    printf("0x%08x\n",endnum);
+  }
+  return 0;
 }
 
 static int cmd_x(char *args){
