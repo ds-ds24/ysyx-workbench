@@ -127,7 +127,7 @@ static bool make_token(char *e) {
             nr_token++;
             break;
             case TK_NOTYPE:
-              break;
+              continue;
           default: 
             assert(0);
         }
