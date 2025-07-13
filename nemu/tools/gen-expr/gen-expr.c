@@ -23,6 +23,7 @@
 // this should be enough
 static char buf[65536] = {};
 static char *p = buf;  
+static int chuling=0;
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format = 
 "#include <stdio.h>\n"
@@ -38,22 +39,26 @@ void reset_buffer(){
 void gen(char c){
   *p++ = c;
   *p = '\0';
+  chuling++;
 }
 void gen_str(char *s){
   strcpy(p, s);
   p += sizeof(s);
+  chuling++;
 }
 void gen_num(){
   int num = rand()%100;
    char str_num[10];
    sprintf(str_num,"%x",num);
    gen_str(str_num);
+   chuling++;
 }
 void gen_rand_op(){
   char ops[] = "+-*/";
   gen(' ');
   gen(ops[rand()%4]);
   gen(' ');
+  chuling += 3;
 }
 int choose(int n){
   return rand()% n;
@@ -76,9 +81,16 @@ int main(int argc, char *argv[]) {
   }
   int i;
   for (i = 0; i < loop; i ++) {
+    int skip = 0;
     reset_buffer();
     gen_rand_expr();
-
+    for(int i=0; i<chuling;i++){
+      if(buf[i]=='/'&&buf[i+1]=='0'){
+        printf("除0操作去除\n");
+        skip =1;
+      }
+    }
+    if(skip) break;
     sprintf(code_buf, code_format, buf);
 
     FILE *fp = fopen("/tmp/.code.c", "w");
