@@ -28,7 +28,7 @@
 #include <string.h>
 
 enum { 
-  TK_NOTYPE = 256, TK_EQ,TK_NUM,TK_NOEQ,TK_AND,TK_XNUM,DEREF,TK_RE
+  TK_NOTYPE = 256, TK_EQ,TK_NUM,TK_NOEQ,TK_AND,TK_XNUM,DEREF,TK_RE,TK_F
 
   /* TODO: Add more token types */
 
@@ -50,8 +50,7 @@ static struct rule {
   {"!=",TK_NOEQ},
   {"0x[0-9a-fA-F]+",TK_XNUM},
   {"[0-9]+",TK_NUM},
-  {"\\*",DEREF},
-  {"$[$a-z0-20]",TK_RE},
+  {"\\$[a-zA-Z0-9]+",TK_RE},
   {"\\+", '+'},         // plus
   {"\\-",'-'},
   {"\\*",'*'},
@@ -142,25 +141,23 @@ static bool make_token(char *e) {
           default: 
             assert(0);
         }
-        for(int i=0;i<nr_token;i++){
-          if(tokens[i].type == '*'){
-          if(i == 0||tokens[i-1].type == '+'||tokens[i-1].type == '-'||tokens[i-1].type == '('||tokens[i].type==TK_EQ||tokens[i].type==TK_NOEQ){
-          tokens[i].type = DEREF;
-          }
-      }
-      }
-         
         break;
       }
     }
-    /*for(int i=0;i<nr_token;i++){
-      if(nr_token==0&&tokens[nr_token].type=='-'){
-        if(tokens[nr_token+1].type == TK_NUM){
-          int fushu = atoi(tokens[nr_token+1].str) * (-1);
-          sprintf(tokens[nr_token+1].str, "%0x", fushu);
+    for(int i=0;i<nr_token;i++){
+      if(tokens[i].type == '*'){
+        if(i == 0||tokens[i-1].type == '+'||tokens[i-1].type == '-'||tokens[i-1].type == '('||tokens[i].type==TK_EQ||tokens[i].type==TK_NOEQ||tokens[i-1].type==TK_AND){
+          tokens[i].type = DEREF;
         }
       }
-    }*/
+    }
+    for(int i=0;i<nr_token;i++){
+      if(tokens[nr_token].type=='-'){
+        if(i==0||tokens[i-1].type == '('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type==TK_AND||tokens[i-1].type==TK_EQ||tokens[i-1].type==TK_NOEQ){
+          tokens[i].type = TK_F;
+        }
+      }
+    }
 
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
@@ -266,6 +263,17 @@ int eval(int p,int q) {
           }
         }
       }
+      if(op==-1){
+        for(int i=q;i>=p;i--){
+          if(tokens[i].type == '(') checkop++;
+          else if(tokens[i].type == ')') checkop--;
+          if(checkop != 0) continue;
+          if(tokens[i].type == TK_F) {
+            op=i;
+            break;
+          }
+        }
+      }
     
       int val1=eval(p,op-1);
       int val2=eval(op+1,q);
@@ -275,6 +283,7 @@ int eval(int p,int q) {
         case TK_EQ: return val1 == val2;
         case TK_NOEQ: return val1 != val2;
         case DEREF: return paddr_read(val2, 4);
+        case TK_F: return val2*(-1);
         case '+':return val1 + val2;
         case '-':return val1 - val2;
         case '*':return val1 * val2;
@@ -307,9 +316,8 @@ word_t expr(char *e, bool *success) {
   }
   else {
     *success = true;
-    return eval(0,nr_token);
+    return eval(0,nr_token-1);
   }
 
 }
-
 
