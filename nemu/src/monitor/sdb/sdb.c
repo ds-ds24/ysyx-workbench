@@ -83,7 +83,7 @@ static int cmd_p(char *args){
   if(success){
     printf("0x%08x\n",endnum);
   }
-  if(!success&&endnum==1){
+  if(!success){
     printf("括号不匹配");
   }
   return 0;

@@ -42,20 +42,21 @@ static struct rule {
   /* TODO: Add more rules.
    * Pay attention to the precedence level of different rules.
    */
-
-  {" +", TK_NOTYPE},    // spaces
+  {" +", TK_NOTYPE},
+  {"\\(",'('},
+  {"\\)",')'},
+  {"&&",TK_AND},
+  {"==", TK_EQ},
+  {"!=",TK_NOEQ},
+  {"0x[0-9a-fA-F]+",TK_XNUM},
+  {"[0-9]+",TK_NUM},
+  {"\\*",DEREF},
+  {"$[$a-z0-20]",TK_RE},
   {"\\+", '+'},         // plus
-  {"==", TK_EQ},        // equal
   {"\\-",'-'},
   {"\\*",'*'},
   {"/",'/'},
-  {"\\(",'('},
-  {"\\)",')'},
-  {"[0-9]+",TK_NUM},
-  {"!=",TK_NOEQ},
-  {"&&",TK_AND},
-  {"$[$a-z0-20]",TK_RE},
-  {"0x[0-9a-fA-F]+",TK_XNUM}
+  
 
 
 };
@@ -296,17 +297,17 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  if(!check_parentheses(0, nr_token-1)){
+  else if(nr_token==0){
     *success = false;
-    return 1;
+    return 0;
   }
   else if(check_parentheses(0,nr_token-1)){
     *success = true;
-    return eval(0,nr_token-1);
+    return eval(1,nr_token-2);
   }
   else {
-    *success = false;
-    return 0;
+    *success = true;
+    return eval(0,nr_token);
   }
 
 }
