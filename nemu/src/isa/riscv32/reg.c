@@ -31,13 +31,10 @@ void isa_reg_display() {
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {
-  word_t sreturn;
   for(int i=0;i<sizeof(regs)/sizeof(regs[0]);i++){
     if(strcmp(s,regs[i])==0){
-      char *sd;
-      sreturn = strtol(regs[i],&sd,16);
       *success = true;
-      return sreturn;
+      return gpr(i);
     }
   }
   *success = false;

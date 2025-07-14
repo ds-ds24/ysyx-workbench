@@ -153,7 +153,7 @@ static bool make_token(char *e) {
       }
     }
     for(int i=0;i<nr_token;i++){
-      if(tokens[nr_token].type=='-'){
+      if(tokens[i].type=='-'){
         if(i==0||tokens[i-1].type == '('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type==TK_AND||tokens[i-1].type==TK_EQ||tokens[i-1].type==TK_NOEQ){
           tokens[i].type = TK_F;
         }
@@ -236,17 +236,6 @@ int eval(int p,int q) {
           if(tokens[i].type == '(') checkop++;
           else if(tokens[i].type == ')') checkop--;
           if(checkop != 0) continue;
-          if(tokens[i].type == DEREF) {
-            op=i;
-            break;
-          }
-        }
-      }
-      if(op==-1){
-        for(int i=q;i>=p;i--){
-          if(tokens[i].type == '(') checkop++;
-          else if(tokens[i].type == ')') checkop--;
-          if(checkop != 0) continue;
           if(tokens[i].type == '+'||tokens[i].type=='-') {
             op=i;
             break;
@@ -269,12 +258,12 @@ int eval(int p,int q) {
           if(tokens[i].type == '(') checkop++;
           else if(tokens[i].type == ')') checkop--;
           if(checkop != 0) continue;
-          if(tokens[i].type == TK_F) {
+          if(tokens[i].type == TK_F||tokens[i].type == DEREF) {
             op=i;
             break;
           }
         }
-      }
+      } 
     
       int val1=eval(p,op-1);
       int val2=eval(op+1,q);
@@ -283,8 +272,12 @@ int eval(int p,int q) {
         case TK_AND:return val1 && val2;
         case TK_EQ: return val1 == val2;
         case TK_NOEQ: return val1 != val2;
-        case DEREF: return paddr_read(val2, 4);
-        case TK_F: return val2*(-1);
+        case DEREF:
+          if(op+1>q) return 0;
+          return paddr_read(val2, 4);
+        case TK_F:
+          if(op+1>q) return 0;
+          return val2*(-1);
         case '+':return val1 + val2;
         case '-':return val1 - val2;
         case '*':return val1 * val2;
@@ -301,14 +294,12 @@ int eval(int p,int q) {
 
 
 word_t expr(char *e, bool *success) {
+  *success = false;
   if (!make_token(e)) {
-    *success = false;
     return 0; 
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
   else if(nr_token==0){
-    *success = false;
     return 0;
   }
   else if(check_parentheses(0,nr_token-1)){
