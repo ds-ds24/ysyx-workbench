@@ -198,6 +198,9 @@ int eval(int p,int q) {
       else if(tokens[p].type==TK_RE) {
         bool success;
         word_t isa_num = isa_reg_str2val(tokens[p].str,&success);
+        if(!success){
+          return 0;
+        }
         return isa_num;
       }
       else {
