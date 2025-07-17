@@ -18,6 +18,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "sdb.h"
+#include "common.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,8 +62,6 @@ static int cmd_q(char *args) {
 }
 
 
-
-
 static int cmd_si(char *args) {
 	int n = (args != NULL) ? atoi(args) : 1;
 	cpu_exec(n);
@@ -70,16 +69,30 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
+static int cmd_w(char *args){
+  WP* wp = add_wp(  args);
+  printf("Hardware watchpoint %d: %s)\n",wp->NO,wp->expr_str);
+  return 0;
+}
+
 static int cmd_info(char *args) {
 	if(strcmp(args,"r")==0){
 		isa_reg_display();
 	}
+  if(strcmp(args,"w")==0){
+    info_watchpoint();
+  }
 	return 0;
+}
+static int cmd_d(char *args){
+  int no = atoi(args);
+  def_wp(no);
+  return 0;
 }
 static int cmd_p(char *args){
   init_regex();
   bool success;
-  word_t endnum = expr( args,&success);
+  word_t endnum = expr(args,&success);
   if(success){
     printf("0x%08x\n",endnum);
   }
@@ -102,7 +115,6 @@ static int cmd_x(char *args){
   return 0;
 }
 
-
 static int cmd_help(char *args);
 
 
@@ -119,7 +131,9 @@ static struct {
   {"si","Let the program excute N instuctions in a single step and the suspend execution",cmd_si},
 	{"info","Print registers",cmd_info},
   {"x","Scan memory",cmd_x},
-  {"p","Expression evaluation",cmd_p}
+  {"p","Expression evaluation",cmd_p},
+  {"w","Add watchpoints",cmd_w},
+  {"d","Delete watchpoints",cmd_d}
 
 };
 

@@ -4,17 +4,9 @@
 #
 # CONFIG_ISA_x86 is not set
 # CONFIG_ISA_mips32 is not set
-CONFIG_ISA_riscv=y
-# CONFIG_ISA_loongarch32r is not set
-CONFIG_ISA="riscv32"
-
-#
-# ISA-dependent Options for riscv
-#
-# CONFIG_RV64 is not set
-# CONFIG_RVE is not set
-# end of ISA-dependent Options for riscv
-
+# CONFIG_ISA_riscv is not set
+CONFIG_ISA_loongarch32r=y
+CONFIG_ISA="loongarch32r"
 CONFIG_ENGINE_INTERPRETER=y
 CONFIG_ENGINE="interpreter"
 CONFIG_MODE_SYSTEM=y
@@ -35,7 +27,7 @@ CONFIG_CC_O2=y
 # CONFIG_CC_O3 is not set
 CONFIG_CC_OPT="-O2"
 # CONFIG_CC_LTO is not set
-# CONFIG_CC_DEBUG is not set
+CONFIG_CC_DEBUG=y
 # CONFIG_CC_ASAN is not set
 # end of Build Options
 
@@ -64,6 +56,7 @@ CONFIG_MEM_RANDOM=y
 # end of Memory Configuration
 
 # CONFIG_DEVICE is not set
+CONFIG_WATCHPOINT=y
 
 #
 # Miscellaneous

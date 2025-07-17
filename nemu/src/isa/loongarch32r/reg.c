@@ -24,9 +24,6 @@ const char *regs[] = {
 };
 
 void isa_reg_display() {
-	CPU_state *cpu =&cpu;
-	for(int i=0;i<sizeof(regs)/sizeof(regsp[0]);i++){
-		printf("-8s 0x%016lx\t%lu\n",regs[i],cpu->rgs[i],cpu->regs[i]);
 }
 
 word_t isa_reg_str2val(const char *s, bool *success) {

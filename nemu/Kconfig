@@ -198,6 +198,11 @@ source "src/memory/Kconfig"
 source "src/device/Kconfig"
 endif
 
+config WATCHPOINT
+  bool "Enable watchpoint"
+  default n
+  help
+    Enable watchpoint feature to monitor memory access.
 
 menu "Miscellaneous"
 choice

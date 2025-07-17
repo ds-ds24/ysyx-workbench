@@ -13,17 +13,19 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
 #include "sdb.h"
+#include <stdbool.h>
 
 #define NR_WP 32
 
-typedef struct watchpoint {
+/*typedef struct watchpoint {
   int NO;
   struct watchpoint *next;
+  word_t value;
+  char *expr_str;
 
-  /* TODO: Add more members if necessary */
-
-} WP;
+} WP; */ 
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -40,4 +42,63 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+WP* add_wp(const char* str){
+  if(free_ == NULL) assert(0); 
+  WP* wp = free_;
+  free_ = free_->next;
+  wp->expr_str = strdup(str);
+  bool success;
+  wp->value = expr(wp->expr_str,&success);
+  wp->next = head;
+  head = wp;
+  return wp;
+}
+bool def_wp(int no){
+  WP* prev = NULL;
+  WP* curr = head;
+  while(curr != NULL && curr->NO != no){
+    prev = curr;
+    curr = curr->next;
+  }
+  if(curr == NULL) {
+    printf("找不到监视点\n");
+    return false;
+  }
+  if(prev==NULL) head = curr->next;
+  else prev->next = curr->next;
+  free(curr->expr_str);
+  curr->next = free_;
+  free_ = curr;
+  return true;
+}
+bool check_wp(){
+  WP* curr = head;
+  while(curr != NULL){
+    bool success;
+    word_t new_value = expr(curr->expr_str,&success);
+    if(new_value != curr->value){
+      printf("监视点%d %s变化:从0x%x变为0x%x",curr->NO,curr->expr_str,curr->value,new_value);
+      curr->value = new_value;
+      return true;
+    }
+    curr = curr->next;
+  }
+  return false;;
+}
+void info_watchpoint(){
+  WP* wp = head;
+  if(head == NULL){
+    printf("NO watchpoints.");
+  }
+  else{
+    while(wp->next == NULL){
+      if(check_wp()){
+        check_wp();
+      }
+      else{
+        printf("监视点%d %s未变化:%d",wp->NO,wp->expr_str,wp->value);
+      }
+    }
+  }
+}
 

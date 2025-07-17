@@ -17,7 +17,20 @@
 #define __SDB_H__
 
 #include <common.h>
+#include <stdbool.h>
 
 word_t expr(char *e, bool *success);
+
+typedef struct watchpoint {
+  int NO;
+  struct watchpoint *next;
+  word_t value;
+  char *expr_str;
+
+} WP; 
+WP* add_wp(const char* str);
+bool def_wp(int no);
+bool check_wp();
+void info_watchpoint();
 
 #endif
