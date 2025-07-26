@@ -78,7 +78,7 @@ bool check_wp(){
     bool success;
     word_t new_value = expr(curr->expr_str,&success);
     if(new_value != curr->value){
-      printf("监视点%d %s变化:从0x%x变为0x%x",curr->NO,curr->expr_str,curr->value,new_value);
+      printf("监视点%d %s变化:从0x%x变为0x%x\n",curr->NO,curr->expr_str,curr->value,new_value);
       curr->value = new_value;
       nemu_state.state = NEMU_STOP;
       return true;
