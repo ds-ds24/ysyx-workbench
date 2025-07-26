@@ -187,11 +187,12 @@ static bool check_parentheses(int p,int q){
 }
 
 int eval(int p,int q) {
-    if(p>q){
-      printf("其实位置大于末位\n");
-      return 0;
-    }
-    else if(p==q){
+    //if(p>q){
+    //  printf("起始位置大于末位\n");
+    //  return 0;
+    //}
+    //else
+     if(p==q){
       char *next_op;
       if(tokens[p].type==TK_XNUM) return strtol(tokens[p].str,&next_op,16);
       else if(tokens[p].type==TK_NUM) return strtol(tokens[p].str,&next_op,10);
