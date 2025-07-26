@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include "common.h"
+#include "utils.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>

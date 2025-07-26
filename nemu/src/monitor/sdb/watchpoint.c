@@ -15,6 +15,7 @@
 
 #include "common.h"
 #include "sdb.h"
+#include "utils.h"
 #include <stdbool.h>
 
 #define NR_WP 32
@@ -79,6 +80,7 @@ bool check_wp(){
     if(new_value != curr->value){
       printf("监视点%d %s变化:从0x%x变为0x%x",curr->NO,curr->expr_str,curr->value,new_value);
       curr->value = new_value;
+      nemu_state.state = NEMU_STOP;
       return true;
     }
     curr = curr->next;
