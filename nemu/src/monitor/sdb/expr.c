@@ -188,7 +188,7 @@ static bool check_parentheses(int p,int q){
 
 int eval(int p,int q) {
     if(p>q){
-      printf("qi shi位置大于末位\n");
+      printf("起始位置大于末位\n");
       return 0;
     }
     else if(p==q){
