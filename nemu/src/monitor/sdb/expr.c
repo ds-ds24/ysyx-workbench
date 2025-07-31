@@ -162,7 +162,7 @@ static bool make_token(char *e) {
     }
     for(int i=0;i<nr_token;i++){
       if(tokens[i].type=='-'){
-        if(i==0||tokens[i-1].type == '('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type==TK_AND||tokens[i-1].type==TK_EQ||tokens[i-1].type==TK_NOEQ){
+        if(i==0||tokens[i-1].type == '('||tokens[i-1].type=='+'||tokens[i-1].type=='-'||tokens[i-1].type==TK_AND||tokens[i-1].type==TK_EQ||tokens[i-1].type==TK_NOEQ||tokens[i-1].type==TK_F){
           tokens[i].type = TK_F;
         }
       }
@@ -284,7 +284,7 @@ word_t eval(int p,int q) {
           case TK_F:
             if(op+1>q) return 0;
             printf("%d",val2*(-1));
-            return (word_t) (0-val2);
+            return val2*(-1);
         }
       }
       int val1=eval(p,op-1);
