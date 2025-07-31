@@ -265,7 +265,7 @@ int eval(int p,int q) {
         }
       }
       if(op==-1){
-        for(int i=q;i>=p;i--){
+        for(int i=p;i<=q;i++){
           if(tokens[i].type == '(') checkop++;
           else if(tokens[i].type == ')') checkop--;
           if(checkop != 0) continue;
