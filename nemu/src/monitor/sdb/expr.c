@@ -283,7 +283,7 @@ word_t eval(int p,int q) {
             return paddr_read(val2, 4);
           case TK_F:
             if(op+1>q) return 0;
-            printf("%d",val2*(-1));
+            //printf("%d\n",val2*(-1));
             return val2*(-1);
         }
       }
@@ -295,7 +295,7 @@ word_t eval(int p,int q) {
         case TK_EQ: return val1 == val2;
         case TK_NOEQ: return val1 != val2;
         case '+':return val1 + val2;
-        case '-':printf("%d %d",val1,val2);return val1 - val2;
+        case '-':return val1 - val2;
         case '*':return val1 * val2;
         case '/':
           if(val2==0) {
