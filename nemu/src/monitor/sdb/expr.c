@@ -318,6 +318,7 @@ word_t expr(char *e, bool *success) {
     return eval(1,nr_token-2);
   }
   else {
+    make_token(e);
     *success = true;
     return eval(0,nr_token-1);
   }
