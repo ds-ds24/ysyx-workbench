@@ -297,6 +297,10 @@ int eval(int p,int q) {
 
 
 word_t expr(char *e, bool *success) {
+  if(nr_token>31){
+    printf("Warning Tokens' length is too long\n");
+    return 0;
+  }
   *success = false;
   if (!make_token(e)) {
     return 0; 
