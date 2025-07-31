@@ -196,7 +196,7 @@ static bool check_parentheses(int p,int q){
 
 int eval(int p,int q) {
     if(p>q){
-      printf("起始位置大于末位\n");
+      printf("起始位置%d大于末位%d\n",p,q);
       return 0;
     }
     else if(p==q){
