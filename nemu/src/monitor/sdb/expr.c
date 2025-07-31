@@ -275,7 +275,17 @@ int eval(int p,int q) {
           }
         }
       } 
-    
+      if(tokens[op].type==TK_F||tokens[op].type==DEREF){
+        int val2=eval(op+1,q);
+        switch(tokens[op].type){
+          case DEREF:
+            if(op+1>q) return 0;
+            return paddr_read(val2, 4);
+          case TK_F:
+            if(op+1>q) return 0;
+            return val2*(-1);
+        }
+      }
       int val1=eval(p,op-1);
       int val2=eval(op+1,q);
 
@@ -283,12 +293,6 @@ int eval(int p,int q) {
         case TK_AND:return val1 && val2;
         case TK_EQ: return val1 == val2;
         case TK_NOEQ: return val1 != val2;
-        case DEREF:
-          if(op+1>q) return 0;
-          return paddr_read(val2, 4);
-        case TK_F:
-          if(op+1>q) return 0;
-          return val2*(-1);
         case '+':return val1 + val2;
         case '-':return val1 - val2;
         case '*':return val1 * val2;
@@ -318,7 +322,6 @@ word_t expr(char *e, bool *success) {
     return eval(1,nr_token-2);
   }
   else {
-    make_token(e);
     *success = true;
     return eval(0,nr_token-1);
   }
