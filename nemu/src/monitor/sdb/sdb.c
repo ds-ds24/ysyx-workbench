@@ -59,7 +59,9 @@ static int cmd_c(char *args) {
 
 static int cmd_q(char *args) {
 	//exit(0);
-  return 0;
+  NEMUState nemu_state = { .state = NEMU_QUIT };
+  if(nemu_state.state==NEMU_QUIT) return -1;
+  return -1;
 }
 
 
