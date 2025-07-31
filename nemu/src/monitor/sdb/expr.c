@@ -283,6 +283,7 @@ int eval(int p,int q) {
             return paddr_read(val2, 4);
           case TK_F:
             if(op+1>q) return 0;
+            printf("%d",val2*(-1));
             return val2*(-1);
         }
       }
