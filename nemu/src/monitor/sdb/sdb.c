@@ -151,7 +151,8 @@ static int cmd_fp(char *args){
     i++;
   }
   
-  printf("%s\n",read[0]);
+  //q
+  // printf("%s\n",read[0]);
   printf("%s\n%s",read1[0],read2[0]);
   //expr(fp, &success);
   fclose(fp);
