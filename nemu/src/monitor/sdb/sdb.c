@@ -132,6 +132,10 @@ static int cmd_x(char *args){
 
 static int cmd_fp(char *args){
   FILE *fp=fopen("/home/ds24/ysyx-workbench/nemu/tools/gen-expr/input","r");
+  if(fp == NULL){
+    printf("无法打开文件\n");
+    return 0;
+  }
   char buf[100];
   char read[1000][100];
   char read1[1000][50];
@@ -147,9 +151,15 @@ static int cmd_fp(char *args){
     char *token = strtok(read[i]," ");
     strcpy(read1[i],token);
     char *expr_str = strtok(NULL,"\0");
+    success = false;
     word_t endnum = expr(expr_str,&success);
-    if(atoi(read1[i]) == endnum){
-      printf("%s,%u",read1[i],endnum);
+    if(!success){
+      printf("弟%d解析错误: %s\n",i+1,expr_str);
+      i++;
+      continue;
+    }
+    if(atoi(read1[i]) != endnum){
+      printf("%s,%u\n",read1[i],endnum);
     }
     i++;
   }
