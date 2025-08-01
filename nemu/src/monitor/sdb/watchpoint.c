@@ -94,7 +94,7 @@ void info_watchpoint(){
   }
   else{
     while(wp != NULL){
-      printf("监视点%d %s的值:0x%16x\n",wp->NO,wp->expr_str,wp->value);
+      printf("监视点%d %s的值:0x%08x\n",wp->NO,wp->expr_str,wp->value);
       wp = wp->next;
     }
   }
