@@ -136,7 +136,7 @@ static int cmd_fp(char *args){
   char read[1000][100];
   char read1[1000][50];
   char read2[1000][50];
-  //bool success;
+  bool success;
   int i=0;    
   while (fgets(buf,sizeof(buf),fp) != NULL){
     strcpy(read[i],buf);
@@ -161,9 +161,9 @@ static int cmd_fp(char *args){
   void *p_str = read2;
   for(j=0;j<500;j++){
     char *now_expr = (char*)p_str;
-    //word_t endnum = expr(now_expr,&success);
+    word_t endnum = expr(now_expr,&success);
     p_str = (char*)p_str+50;
-    printf("%s\n",now_expr);
+    printf("%s,%u\n",now_expr,endnum);
   }
   
   //q
