@@ -146,10 +146,10 @@ static int cmd_fp(char *args){
     }
     char *token = strtok(read[i]," ");
     strcpy(read1[i],token);
-    token = strtok(NULL,"\0");
+    char *expr_str = strtok(NULL,"\0");
     //strcpy(read2[i],token);
-    word_t endnum =expr(token,&success);
-    printf("%s,%d\n",read1[i],endnum);
+    word_t endnum =expr(expr_str,&success);
+    printf("%s,%u\n",read1[i],endnum);
     i++;
   }
   
