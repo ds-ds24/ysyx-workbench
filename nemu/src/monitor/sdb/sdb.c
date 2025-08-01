@@ -135,15 +135,21 @@ static int cmd_fp(char *args){
   //bool success;
   char buf[100];
   char read[1000][100];
+  //char read1[1000][50];
+  //char read2[1000][50];
   int i=0;
   while (fgets(buf,sizeof(buf),fp) != NULL){
-    //printf("%s\n",buf);
     strcpy(read[i],buf);
+    size_t len = strlen(read[i]);
+    if(len > 0 && read[i][len-1]=='\n'){
+      read[i][len-1] = '\0';
+    }
     i++;
   }
   printf("%s\n",read[0]);
   //expr(fp, &success);
   fclose(fp);
+
   return 0;
 }
 
