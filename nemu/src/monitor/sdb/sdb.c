@@ -138,7 +138,7 @@ static int cmd_fp(char *args){
   char read2[1000][50];
   bool success;
   int i=0;    
-  while (fgets(buf,sizeof(buf),fp) != NULL && i<100){
+  while (fgets(buf,sizeof(buf),fp) != NULL && i<1){
     strcpy(read[i],buf);
     size_t len = strlen(read[i]);
     if(len > 0 && read[i][len-1]=='\n'){
