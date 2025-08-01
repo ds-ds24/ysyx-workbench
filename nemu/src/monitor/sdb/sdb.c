@@ -163,7 +163,7 @@ static int cmd_fp(char *args){
     char *now_expr = (char*)p_str;
     word_t endnum = expr(now_expr,&success);
     p_str = (char*)p_str+50;
-    printf("%s,%u\n",now_expr,endnum);
+    printf("%s,%u\n",read1[i],endnum);
   }
   
   //q
