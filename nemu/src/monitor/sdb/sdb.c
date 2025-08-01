@@ -134,14 +134,14 @@ static int cmd_fp(char *args){
   FILE *fp=fopen("/home/ds24/ysyx-workbench/nemu/tools/gen-expr/input","r");
   //bool success;
   char buf[100];
-  //char read[100][100];
-  //int i=0;
+  char read[100][100];
+  int i=0;
   while (fgets(buf,sizeof(buf),fp) != NULL){
-    printf("%s\n",buf);
-    //strcpy(read[i],buf);
-    //i++;
+    //printf("%s\n",buf);
+    strcpy(read[i],buf);
+    i++;
   }
-  //printf("%s\n",read[0]);
+  printf("%s\n",read[0]);
   //expr(fp, &success);
   fclose(fp);
   return 0;
