@@ -145,9 +145,9 @@ static int cmd_fp(char *args){
       read[i][len-1] = '\0';
     }
     char *token = strtok(read[i]," ");
-    strtok(read1[i],token);
+    strcpy(read1[i],token);
     token = strtok(NULL,"\0");
-    strtok(read2[i],token);
+    strcpy(read2[i],token);
     i++;
   }
   
