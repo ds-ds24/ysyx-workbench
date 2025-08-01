@@ -158,7 +158,7 @@ static int cmd_fp(char *args){
       i++;
       continue;
     }
-    if(atoi(read1[i]) != endnum){
+    if(atoi(read1[i]) == endnum){
       printf("%s,%u\n",read1[i],endnum);
     }
     i++;
