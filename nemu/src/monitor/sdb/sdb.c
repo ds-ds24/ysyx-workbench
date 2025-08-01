@@ -132,104 +132,52 @@ static int cmd_x(char *args){
 
 static int cmd_fp(char *args){
   FILE *fp=fopen("/home/ds24/ysyx-workbench/nemu/tools/gen-expr/input","r");
-  if (fp == NULL) {  // 增加文件打开失败检查
-    printf("无法打开input文件\n");
-    return -1;
-  }
   char buf[100];
   char read[1000][100];
-  char read1[1000][50];  // 存储预期结果
-  char read2[1000][50];  // 存储表达式
-  //bool success;
+  char read1[1000][50];
+  char read2[1000][50];
+  bool success;
   int i=0;    
-  // 读取文件，仅存储有效行（i记录实际行数）
-  while (fgets(buf,sizeof(buf),fp) != NULL && i < 1000) {  // 限制最大行数（避免数组越界）
+  while (fgets(buf,sizeof(buf),fp) != NULL && i<100){
     strcpy(read[i],buf);
     size_t len = strlen(read[i]);
     if(len > 0 && read[i][len-1]=='\n'){
-      read[i][len-1] = '\0';  // 去除换行符
+      read[i][len-1] = '\0';
     }
     char *token = strtok(read[i]," ");
-    if (token == NULL) break;  // 跳过空行
     strcpy(read1[i],token);
     char *expr_str = strtok(NULL,"\0");
-    if (expr_str == NULL) strcpy(read2[i], "");  // 处理无表达式的情况
+    if(expr_str == NULL) strcpy(read2[i],"");
+    //printf("%s\n",expr_str);
     else strcpy(read2[i],expr_str);
+    //word_t endnum =expr(expr_str,&success);
+    //printf("%s,%u\n",read1[i],endnum);
     i++;
   }
-  fclose(fp);  // 及时关闭文件
-
-  // 仅打印有效表达式（i行）
   int j=0;
-  while(j < i){  // 循环次数为实际行数i
+  while(j<i){
     printf("%s\n",read2[j]);
     j++;
   }
-
-  // 仅计算有效表达式（i行）
-  for(j=0;j < i;j++){  // 循环次数为实际行数i
-    //char *now_expr = read2[j];  // 直接访问有效表达式，无需指针偏移
-    // 在打印read2[j]的循环中添加
-    printf("表达式: %s\n", read2[j]);
-    printf("十六进制: ");
-    for(int k=0; read2[j][k]!='\0'; k++){
-      printf("%02X ", (unsigned char)read2[j][k]);
-    }
-    printf("\n");
-    //word_t endnum = expr(now_expr,&success);
-    //printf("%s,%u\n",read1[j],endnum);  // 修正索引为j（与当前表达式对应）
+  for(j=0;j<i;j++){
+    char *p_str = read2[j];
+    word_t endnum = expr(p_str,&success);
+    printf("%s,%u\n",read1[j],endnum);
   }
+  
+  //q
+  // printf("%s\n",read[0]);
+  // printf("%s\n%s",read1[0],read2[0]);
+  //expr(fp, &success);
+  fclose(fp);
+  // bool success;
+  // while(read2[i] != "\0"){
+  //   word_t endnum = expr(read2,&success);
+  //   printf("%s,%d",read1[i],endnum);
+  // }
+
   return 0;
 }
-
-// static int cmd_fp(char *args){
-//   FILE *fp=fopen("/home/ds24/ysyx-workbench/nemu/tools/gen-expr/input","r");
-//   char buf[100];
-//   char read[1000][100];
-//   char read1[1000][50];
-//   char read2[1000][50];
-//   bool success;
-//   int i=0;    
-//   while (fgets(buf,sizeof(buf),fp) != NULL && i<100){
-//     strcpy(read[i],buf);
-//     size_t len = strlen(read[i]);
-//     if(len > 0 && read[i][len-1]=='\n'){
-//       read[i][len-1] = '\0';
-//     }
-//     char *token = strtok(read[i]," ");
-//     strcpy(read1[i],token);
-//     char *expr_str = strtok(NULL,"\0");
-//     if(expr_str == NULL) strcpy(read2[i],"");
-//     //printf("%s\n",expr_str);
-//     else strcpy(read2[i],expr_str);
-//     //word_t endnum =expr(expr_str,&success);
-//     //printf("%s,%u\n",read1[i],endnum);
-//     i++;
-//   }
-//   int j=0;
-//   while(j<i){
-//     printf("%s\n",read2[j]);
-//     j++;
-//   }
-//   for(j=0;j<i;j++){
-//     char *p_str = read2[j];
-//     word_t endnum = expr(p_str,&success);
-//     printf("%s,%u\n",read1[j],endnum);
-//   }
-  
-//   //q
-//   // printf("%s\n",read[0]);
-//   // printf("%s\n%s",read1[0],read2[0]);
-//   //expr(fp, &success);
-//   fclose(fp);
-//   // bool success;
-//   // while(read2[i] != "\0"){
-//   //   word_t endnum = expr(read2,&success);
-//   //   printf("%s,%d",read1[i],endnum);
-//   // }
-
-//   return 0;
-// }
 
 static int cmd_help(char *args);
 
