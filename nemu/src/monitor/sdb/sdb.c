@@ -143,6 +143,7 @@ static int cmd_fp(char *args){
   }
   printf("%s\n",read[0]);
   //expr(fp, &success);
+  fclose(fp);
   return 0;
 }
 
