@@ -140,7 +140,7 @@ static int cmd_fp(char *args){
   char read[1000][100];
   char read1[1000][50];  // 存储预期结果
   char read2[1000][50];  // 存储表达式
-  bool success;
+  //bool success;
   int i=0;    
   // 读取文件，仅存储有效行（i记录实际行数）
   while (fgets(buf,sizeof(buf),fp) != NULL && i < 1000) {  // 限制最大行数（避免数组越界）
@@ -168,9 +168,16 @@ static int cmd_fp(char *args){
 
   // 仅计算有效表达式（i行）
   for(j=0;j < i;j++){  // 循环次数为实际行数i
-    char *now_expr = read2[j];  // 直接访问有效表达式，无需指针偏移
-    word_t endnum = expr(now_expr,&success);
-    printf("%s,%u\n",read1[j],endnum);  // 修正索引为j（与当前表达式对应）
+    //char *now_expr = read2[j];  // 直接访问有效表达式，无需指针偏移
+    // 在打印read2[j]的循环中添加
+    printf("表达式: %s\n", read2[j]);
+    printf("十六进制: ");
+    for(int k=0; read2[j][k]!='\0'; k++){
+      printf("%02X ", (unsigned char)read2[j][k]);
+    }
+    printf("\n");
+    //word_t endnum = expr(now_expr,&success);
+    //printf("%s,%u\n",read1[j],endnum);  // 修正索引为j（与当前表达式对应）
   }
   return 0;
 }
