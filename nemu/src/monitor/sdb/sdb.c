@@ -155,7 +155,7 @@ static int cmd_fp(char *args){
   }
   int j=0;
   while(j<=500){
-    printf("%s",read2[j]);
+    printf("%s\n",read2[j]);
     j++;
   }
   
