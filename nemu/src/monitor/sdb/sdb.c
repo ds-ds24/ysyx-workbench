@@ -138,7 +138,7 @@ static int cmd_fp(char *args){
   char read2[1000][50];
   bool success;
   int i=0;    
-  while (fgets(buf,sizeof(buf),fp) != NULL){
+  while (fgets(buf,sizeof(buf),fp) != NULL && i<100){
     strcpy(read[i],buf);
     size_t len = strlen(read[i]);
     if(len > 0 && read[i][len-1]=='\n'){
@@ -147,23 +147,22 @@ static int cmd_fp(char *args){
     char *token = strtok(read[i]," ");
     strcpy(read1[i],token);
     char *expr_str = strtok(NULL,"\0");
+    if(expr_str == NULL) strcpy(read2[i],"");
     //printf("%s\n",expr_str);
-    strcpy(read2[i],expr_str);
+    else strcpy(read2[i],expr_str);
     //word_t endnum =expr(expr_str,&success);
     //printf("%s,%u\n",read1[i],endnum);
     i++;
   }
   int j=0;
-  while(j<=500){
+  while(j<i){
     printf("%s\n",read2[j]);
     j++;
   }
-  void *p_str = read2;
-  for(j=0;j<500;j++){
-    char *now_expr = (char*)p_str;
-    word_t endnum = expr(now_expr,&success);
-    p_str = (char*)p_str+50;
-    printf("%s,%u\n",read1[i],endnum);
+  for(j=0;j<i;j++){
+    char *p_str = read2[j];
+    word_t endnum = expr(p_str,&success);
+    printf("%s,%u\n",read1[j],endnum);
   }
   
   //q
