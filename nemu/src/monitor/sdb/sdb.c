@@ -154,7 +154,7 @@ static int cmd_fp(char *args){
     success = false;
     word_t endnum = expr(expr_str,&success);
     if(!success){
-      printf("弟%d解析错误: %s\n",i+1,expr_str);
+      printf("第%d解析错误: %s\n",i+1,expr_str);
       i++;
       continue;
     }
