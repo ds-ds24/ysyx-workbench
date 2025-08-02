@@ -58,8 +58,6 @@ static int cmd_c(char *args) {
 
 
 static int cmd_q(char *args) {
-	//exit(0);
-  //NEMUState nemu_state = { .state = NEMU_QUIT };
   nemu_state.state=NEMU_QUIT;
   return -1;
 }
@@ -98,27 +96,10 @@ static int cmd_w(char *args) {
 
   return 0;
 }
-// static int cmd_w(char *args){
-//   if(!args){
-//     printf("Usage: w EXPR\n");
-//      return 0;
-//   }
-//   bool success;
-//   str_condition(args);
-//   word_t us = expr(args,&success);
-//   if(success){
-//     WP* wp = add_wp(  args);
-//     printf("Hardware watchpoint %d: %s. value :%d)\n",wp->NO,wp->expr_str,us);
-//     return 0;
-//   }
-//   else {
-//     printf("表达式错误\n");
-//     return 0;
-//   }
-// }
 
 static int cmd_info(char *args) {
 	if(strcmp(args,"r")==0){
+    //printf("%-8s 0x%016x\t%u\n",);
 		isa_reg_display();
 	}
   if(strcmp(args,"w")==0){
