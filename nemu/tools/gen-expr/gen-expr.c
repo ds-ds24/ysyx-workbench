@@ -13,12 +13,15 @@
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
 
+#include "common.h"
+#include <climits>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
 #include <string.h>
+#include "sdb.h"
 
 // this should be enough
 static char buf[65536] = {};
@@ -28,8 +31,8 @@ static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format = 
 "#include <stdio.h>\n"
 "int main() { "
-"  unsigned result = %s; "
-"  printf(\"%%u\", result); "
+"  int result = %s; "
+"  printf(\"%%d\", result); "
 "  return 0; "
 "}";
 void reset_buffer(){
@@ -50,42 +53,49 @@ void gen_num(){
    sprintf(str_num,"%d",num);
    gen_str(str_num);
 }
-void gen_rand_op(){
+void gen_rand_op(char *op){
   char ops[] = "+-*/";
-  char op = ops[rand()%4];
+  *op = ops[rand()%4];
   gen(' ');
-  gen(op);
+  gen(*op);
   gen(' ');
 }
 int choose(int n){
   return rand()% n;
 } 
-static void gen_rand_expr(int depth) {
+static char* gen_rand_expr(int depth) {
+  char *start = p;
   if(depth >3){
     gen_num();
-    return;
+    return start;
   }
   switch (choose(3)) {
     case 0: gen_num();break;
     case 1:gen('(');gen_rand_expr(depth+1);gen(')');break;
     default:
-      gen_rand_expr(depth+1);
-      char *now_p = p;
-      gen_rand_op();
-      char op = *(now_p+1);
-      char *start_num = p;
-      gen_rand_expr(depth+1);
-      if(op == '/'&&strcmp(start_num,"0")==0){
-        p=start_num;
-        *p = '\0';
-        int rigth_num =rand()%99 + 1;
-        char num_str[10];
-        sprintf(num_str,"%d",rigth_num);
-        gen_str(num_str);
+      char *left = gen_rand_expr(depth+1);
+      char op;
+      gen_rand_op(&op);
+      char *right = p;
+      if(op=='/'){
+        while(1){
+          bool success;
+          char *e = gen_rand_expr(depth+1);
+          word_t num = expr(e,&success);
+          if(success && num!=0){
+            break;
+          }
+          p = right;
+          *p = '\0';
+        }
+      }
+      else {
+        gen_rand_expr(depth+1);
       }
       break;
      
   }
+  return start;
 }
 
 int main(int argc, char *argv[]) {
@@ -116,7 +126,7 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%d %s\n", result, buf);
   }
   return 0;
 }
