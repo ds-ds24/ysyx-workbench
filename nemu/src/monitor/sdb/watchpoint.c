@@ -17,19 +17,11 @@
 #include "isa.h"
 #include "sdb.h"
 #include "utils.h"
-//#include <cstddef>
-//#include <ios>
 #include <stdbool.h>
+
 
 #define NR_WP 32
 
-/*typedef struct watchpoint {
-  int NO;
-  struct watchpoint *next;
-  word_t value;
-  char *expr_str;
-
-} WP; */
 
 static WP wp_pool[NR_WP] = {};
 static WP *head = NULL, *free_ = NULL;
@@ -82,23 +74,6 @@ WP *add_wp_condition(const char *str_expr){
 }
 
 
-/* TODO: Implement the functionality of watchpoint */
-// WP* add_wp(const char* str){
-//   if(free_ == NULL) assert(0); 
-//   WP* wp = free_;
-//   free_ = free_->next;
-//   if (!str_condition(str)) {
-//     wp->next = free_;
-//     free_ = wp;
-//     return NULL;
-//   }
-
-//   bool success;
-//   wp->value = expr(wp->expr_str,&success);
-//   wp->next = head;
-//   head = wp;
-//   return wp;
-// }
 bool def_wp(int no){
   WP* prev = NULL;
   WP* curr = head;
