@@ -14,6 +14,7 @@
 ***************************************************************************************/
 
 #include "common.h"
+#include "isa.h"
 #include "sdb.h"
 #include "utils.h"
 #include <stdbool.h>
@@ -95,7 +96,7 @@ void info_watchpoint(){
   else{
     while(wp != NULL){
       if(strcmp(wp->expr_str,"$pc")==0){
-        printf("监视点%d %s的:0x%08x\n",wp->NO,wp->expr_str,nemu_state.halt_pc);
+        printf("监视点%d %s的:0x%08x\n",wp->NO,wp->expr_str,cpu.pc);
         wp = wp->next;
       }
       else{
