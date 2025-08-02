@@ -12,7 +12,7 @@
 *
 * See the Mulan PSL v2 for more details.
 ***************************************************************************************/
-
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,13 +23,12 @@
 // this should be enough
 static char buf[65536] = {};
 static char *p = buf;  
-static int chuling=0;
 static char code_buf[65536 + 128] = {}; // a little larger than `buf`
 static char *code_format = 
 "#include <stdio.h>\n"
 "int main() { "
-"  unsigned result = %s; "
-"  printf(\"%%u\", result); "
+"  int result = %s; "
+"  printf(\"%%d\", result); "
 "  return 0; "
 "}";
 void reset_buffer(){
@@ -50,34 +49,34 @@ void gen_num(){
    sprintf(str_num,"%d",num);
    gen_str(str_num);
 }
-void gen_rand_op(){
+void gen_rand_op(char *op){
   char ops[] = "+-*/";
-  char op = ops[rand()%4];
+  *op = ops[rand()%4];
   gen(' ');
-  gen(op);
+  gen(*op);
   gen(' ');
 }
 int choose(int n){
   return rand()% n;
 } 
-static void gen_rand_expr(int depth) {
+static char* gen_rand_expr(int depth) {
+  char *start = p;
   if(depth >3){
     gen_num();
-    return;
+    return start;
   }
   switch (choose(3)) {
     case 0: gen_num();break;
     case 1:gen('(');gen_rand_expr(depth+1);gen(')');break;
     default:
       gen_rand_expr(depth+1);
-      char *now_p = p;
-      gen_rand_op();
-      char op = *(now_p+1);
-      char *start_num = p;
-      gen_rand_expr(depth+1);
+      char op;
+      gen_rand_op(&op);
+      gen_rand_expr(depth +1);
       break;
      
   }
+  return start;
 }
 
 int main(int argc, char *argv[]) {
@@ -98,9 +97,11 @@ int main(int argc, char *argv[]) {
     fputs(code_buf, fp);
     fclose(fp);
 
-    int ret = system("gcc /tmp/.code.c -o /tmp/.expr");
-    if (ret != 0) continue;
-
+    int ret = system("gcc -Werror=div-by-zero /tmp/.code.c -o /tmp/.expr");
+    if (ret != 0) {
+      i=i-1;
+      continue;
+    }
     fp = popen("/tmp/.expr", "r");
     assert(fp != NULL);
 
@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
     ret = fscanf(fp, "%d", &result);
     pclose(fp);
 
-    printf("%u %s\n", result, buf);
+    printf("%d %s\n", result, buf);
   }
   return 0;
 }

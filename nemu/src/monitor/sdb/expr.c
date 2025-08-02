@@ -27,6 +27,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include "sdb.h"
 
 enum { 
   TK_NOTYPE = 256, TK_EQ,TK_NUM,TK_NOEQ,TK_AND,TK_XNUM,DEREF,TK_RE,TK_F
