@@ -27,6 +27,8 @@ typedef struct watchpoint {
   struct watchpoint *next;
   word_t value;
   char *expr_str;
+  bool has_condition;
+  word_t right_value;
 } WP;
 
 

@@ -72,24 +72,48 @@ static int cmd_si(char *args) {
 	return 0;
 }
 
-static int cmd_w(char *args){
-  if(!args){
+static int cmd_w(char *args) {
+  if (!args) {
     printf("Usage: w EXPR\n");
-     return 0;
-  }
-  bool success;
-  str_condition(args);
-  word_t us = expr(args,&success);
-  if(success){
-    WP* wp = add_wp(  args);
-    printf("Hardware watchpoint %d: %s. value :%d)\n",wp->NO,wp->expr_str,us);
     return 0;
   }
-  else {
-    printf("表达式错误\n");
+  WP* wp = add_wp(args);
+  if (!wp) {
+    printf("添加监视点失败\n");
     return 0;
   }
+  if (wp->has_condition) {
+    printf("Hardware watchpoint %d: %s == 0x%08x\n",wp->NO, wp->expr_str, wp->right_value);
+  } else {
+    if (strcmp(wp->expr_str, "$pc") == 0) {
+      printf("Hardware watchpoint %d: %s: 0x%08x\n",
+             wp->NO, wp->expr_str,cpu.pc);
+    } else {
+      printf("Hardware watchpoint %d: %s: 0x%08x\n",
+             wp->NO, wp->expr_str,wp->value);
+    }
+  }
+
+  return 0;
 }
+// static int cmd_w(char *args){
+//   if(!args){
+//     printf("Usage: w EXPR\n");
+//      return 0;
+//   }
+//   bool success;
+//   str_condition(args);
+//   word_t us = expr(args,&success);
+//   if(success){
+//     WP* wp = add_wp(  args);
+//     printf("Hardware watchpoint %d: %s. value :%d)\n",wp->NO,wp->expr_str,us);
+//     return 0;
+//   }
+//   else {
+//     printf("表达式错误\n");
+//     return 0;
+//   }
+// }
 
 static int cmd_info(char *args) {
 	if(strcmp(args,"r")==0){

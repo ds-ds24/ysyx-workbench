@@ -17,6 +17,7 @@
 #include "isa.h"
 #include "sdb.h"
 #include "utils.h"
+//#include <cstddef>
 //#include <ios>
 #include <stdbool.h>
 
@@ -38,31 +39,38 @@ void init_wp_pool() {
   for (i = 0; i < NR_WP; i ++) {
     wp_pool[i].NO = i;
     wp_pool[i].next = (i == NR_WP - 1 ? NULL : &wp_pool[i + 1]);
+    wp_pool[i].expr_str = NULL;
+    wp_pool[i].has_condition = false;
   }
 
   head = NULL;
   free_ = wp_pool;
 }
-word_t right;
-bool has_cond=false;
-char *var;
+
 bool str_condition(const char *str_expr){
-  char *var;//y
+  WP *wp=NULL;
   char *eq_pos = strstr(str_expr, "==");
   if (eq_pos) {
-    has_cond = true;
     int var_len = eq_pos - str_expr;
-    var = malloc(var_len + 1);
+    char *var = malloc(var_len + 1);
+    if(!var) return false;
     strncpy(var, str_expr, var_len);
     (var)[var_len] = '\0';
+    wp->expr_str = strdup(var);
     bool success;
-    right = expr(eq_pos + 2, &success);
+    word_t right = expr(eq_pos + 2, &success);
+    if(!success){
+      free(var);
+      printf("表达式错\n");
+      return false;
+    }
+    wp->right_value = right;
+    wp->has_condition = true;
     return success;
   } else {
-    has_cond = false;
-    var = strdup(str_expr);
-    right = 0;
-    return true;
+    wp->has_condition = false;
+    wp->expr_str = strdup(str_expr);
+    return wp->expr_str != NULL;
   }
 }
 
@@ -72,12 +80,12 @@ WP* add_wp(const char* str){
   if(free_ == NULL) assert(0); 
   WP* wp = free_;
   free_ = free_->next;
-  if(has_cond){
-    wp->expr_str = strdup(var);
+  if (!str_condition(str)) {
+    wp->next = free_;
+    free_ = wp;
+    return NULL;
   }
-  else{
-    wp->expr_str = strdup(str);
-  }
+
   bool success;
   wp->value = expr(wp->expr_str,&success);
   wp->next = head;
@@ -107,10 +115,9 @@ bool check_wp(){
   while(curr != NULL){
     bool success;
     word_t new_value = expr(curr->expr_str,&success);
-    if (has_cond) {
-      if (right == new_value) {
+    if (curr->has_condition) {
+      if (curr->right_value == new_value) {
         printf("监视点%d %s触发:0x%08x\n", curr->NO, curr->expr_str,new_value);
-        has_cond = false;
         nemu_state.state = NEMU_STOP;
       }
     }
