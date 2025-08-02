@@ -18,7 +18,7 @@ module mux41(
 	end
 endmodule
 
-module top(
+module top(//four to two
 	input  [1:0] X0,X1,X2,X3,
 	input  [1:0] Y,
 	output reg [1:0] F
