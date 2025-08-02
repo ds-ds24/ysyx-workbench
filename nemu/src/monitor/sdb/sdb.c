@@ -83,8 +83,10 @@ static int cmd_w(char *args) {
     return 0;
   }
   if (wp->has_condition) {
-    printf("Hardware watchpoint %d: %s == 0x%08x\n",wp->NO, wp->expr_str, wp->right_value);
-  } else {
+    if(check_wp()){
+      printf("Hardware watchpoint %d: %s == 0x%08x\n",wp->NO, wp->expr_str, wp->right_value);
+    }
+    } else {
     if (strcmp(wp->expr_str, "$pc") == 0) {
       printf("Hardware watchpoint %d: %s: 0x%08x\n",
              wp->NO, wp->expr_str,cpu.pc);
