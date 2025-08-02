@@ -99,7 +99,7 @@ static int cmd_w(char *args) {
 
 static int cmd_info(char *args) {
 	if(strcmp(args,"r")==0){
-    //printf("%-8s 0x%016x\t%u\n",);
+    printf("$pc     0x%016x\t%u\n",cpu.pc,cpu.pc);
 		isa_reg_display();
 	}
   if(strcmp(args,"w")==0){
