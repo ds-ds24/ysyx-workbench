@@ -1,0 +1,10 @@
+CompileFlags:
+    Add:
+        - -I/home/ds24/ysyx-workbench/nemu/include
+        - -I/home/ds24/ysyx-workbench/nemu/src/isa/riscv32/include
+        - -I/home/ds24/verilator/include/verilated.h
+        - -D__GUEST_ISA__=riscv32
+        - -DITRACE_COND=true
+        - -DCONFIG_MTRACE=1
+        - -DCONFIG_FTRACE=1
+        - -DCONFIG_DIFFTEST
