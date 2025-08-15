@@ -28,7 +28,7 @@ int sprintf(char *out, const char *fmt, ...) {
     else{
       i++;
       switch(fmt[i]){
-        case('s'):{
+        case's':{
           char *str=va_arg(args,char*);
           for(int j=0;str[i]!='\0';j++){
             *p++=str[j];
@@ -36,7 +36,7 @@ int sprintf(char *out, const char *fmt, ...) {
           }
           break;
         }
-        case('d'):{
+        case'd':{
           int num=va_arg(args,int);
           char temp[12];
           int temp_idx=0;
