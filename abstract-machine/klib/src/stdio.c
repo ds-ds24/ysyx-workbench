@@ -54,7 +54,7 @@ int sprintf(char *out, const char *fmt, ...) {
             temp[temp_idx++]='0' +(num % 10);
             num /= 10;
             }
-            for(int j=temp_idx-1;j>0;j--){
+            for(int j=temp_idx-1;j>=0;j--){
               *p=temp[j];
               p++;
               count++;
