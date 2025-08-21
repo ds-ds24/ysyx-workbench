@@ -1,3 +1,13 @@
+
+sim:
+	$(call git_commit, "sim RTL") # DO NOT REMOVE THIS LINE!!!
+	@echo "Write this Makefile by your self."
+	verilator --cc -trace --exe --build -j 0 -Wall csrc/main.cpp vsrc/top.v
+	./obj_dir/Vtop
+	gtkwave wave.vcd
+
+include ../Makefile
+
 TOPNAME = top
 NXDC_FILES = constr/top.nxdc
 INC_PATH ?=
@@ -47,7 +57,8 @@ run: $(BIN)
 
 clean:
 	rm -rf $(BUILD_DIR)
-
+	rm -rf obj_dir
+	rm wave.vcd
 .PHONY: default all clean run
 
 
