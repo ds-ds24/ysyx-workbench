@@ -60,6 +60,3 @@ clean:
 	rm -rf obj_dir
 	rm wave.vcd
 .PHONY: default all clean run
-
-
-
