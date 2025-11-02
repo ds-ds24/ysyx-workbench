@@ -1,6 +1,6 @@
 [submodule "am-kernels"]
 	path = am-kernels
-	url = git@github.com:NJU-ProjectN/am-kernels.git
+	url = git@github.com:ds-ds24/am-kernels.git
 [submodule "fceux-am"]
 	path = fceux-am
 	url = git@github.com:ds-ds24/fceux-am.git
